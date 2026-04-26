@@ -512,4 +512,18 @@
   .move-history {
     max-height: 300px;
   }
+
+  .welcome-backdrop {
+    align-items: start;
+    justify-items: center;
+    overflow: auto;
+    padding: 10px;
+    box-sizing: border-box;
+  }
+
+  .welcome-card {
+    width: min(100%, 380px);
+    max-height: 100%;
+    overflow: auto;
+  }
 }
