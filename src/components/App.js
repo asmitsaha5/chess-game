@@ -593,7 +593,7 @@ function App() {
         <div className="brand">
           <img src={logo} alt="Chess Logo" className="game-image" />
           <div className="game-info">
-            <h1>A very basic chess game</h1>
+            <h1>A chess game</h1>
           </div>
         </div>
 
