@@ -1,70 +1,62 @@
-# Getting Started with Create React App
+# ♟️ Chess Game
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+A chess game built with React featuring an AI opponent powered by the Minimax algorithm with Alpha-Beta pruning. Choose your difficulty, pick a side, and play.
 
-## Available Scripts
+[![Live Demo](https://img.shields.io/badge/Live%20Demo-chess--game--as.vercel.app-brightgreen?style=for-the-badge&logo=vercel)](https://chess-game-as.vercel.app/)
+[![React](https://img.shields.io/badge/React-18-61DAFB?style=for-the-badge&logo=react)](https://react.dev/)
+[![chess.js](https://img.shields.io/badge/chess.js-0.13-lightgrey?style=for-the-badge)](https://github.com/jhlywa/chess.js)
+[![Deployed on Vercel](https://img.shields.io/badge/Deployed-Vercel-black?style=for-the-badge&logo=vercel)](https://vercel.com/)
 
-In the project directory, you can run:
+👉 **[Play here](https://chess-game-as.vercel.app/)**
 
-### `npm start`
+---
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in your browser.
+## 🧠 How the AI Works
 
-The page will reload when you make changes.\
-You may also see any lint errors in the console.
+The computer opponent uses a different strategy per difficulty level:
 
-### `npm test`
+| Level | Strategy |
+|---|---|
+| **Easy** | Random legal move |
+| **Medium** | Greedy 1-ply — prioritises captures, checks, and promotions by static piece value |
+| **Hard** | Minimax (depth 2) with Alpha-Beta pruning — minimises opponent's best response while maximising its own |
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+Position evaluation is material-based:
 
-### `npm run build`
+| Piece | Value |
+|---|---|
+| Pawn | 100 |
+| Knight | 320 |
+| Bishop | 330 |
+| Rook | 500 |
+| Queen | 900 |
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
+Checkmate scores ±100,000. Draws evaluate to 0.
 
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
+---
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+## 🛠️ Tech Stack
 
-### `npm run eject`
+| | |
+|---|---|
+| React 18 | UI and state management |
+| chess.js | Move validation, PGN/FEN, game rules |
+| react-chessboard | Interactive board with drag-and-drop |
+| Vercel | Deployment |
 
-**Note: this is a one-way operation. Once you `eject`, you can't go back!**
+---
 
-If you aren't satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
+## 🚀 Run Locally
 
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you're on your own.
+```bash
+git clone https://github.com/asmitsaha5/chess-game.git
+cd chess-game
+npm install
+npm start
+```
 
-You don't have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn't feel obligated to use this feature. However we understand that this tool wouldn't be useful if you couldn't customize it when you are ready for it.
+---
 
-## Learn More
+## 🙋‍♂️ Author
 
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
-
-To learn React, check out the [React documentation](https://reactjs.org/).
-
-### Code Splitting
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/code-splitting](https://facebook.github.io/create-react-app/docs/code-splitting)
-
-### Analyzing the Bundle Size
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size](https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size)
-
-### Making a Progressive Web App
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app](https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app)
-
-### Advanced Configuration
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/advanced-configuration](https://facebook.github.io/create-react-app/docs/advanced-configuration)
-
-### Deployment
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/deployment](https://facebook.github.io/create-react-app/docs/deployment)
-
-### `npm run build` fails to minify
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)
+**Asmit Saha** — [@asmitsaha5](https://github.com/asmitsaha5)
