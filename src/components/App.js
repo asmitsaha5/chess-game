@@ -362,7 +362,9 @@ function App() {
   const [difficulty, setDifficulty] = useState('easy');
   const [setupDifficulty, setSetupDifficulty] = useState('easy');
   const [playerColor, setPlayerColor] = useState(null);
+  const [boardWidth, setBoardWidth] = useState(440);
   const computerMoveTimeout = useRef(null);
+  const boardContainerRef = useRef(null);
 
   const computerColor = playerColor ? (playerColor === 'w' ? 'b' : 'w') : null;
   const status = getGameStatus(game, isThinking, playerColor);
@@ -557,6 +559,34 @@ function App() {
     }
   }, [computerColor, game, isThinking, playerColor, scheduleComputerMove]);
 
+  useEffect(() => {
+    const container = boardContainerRef.current;
+    if (!container) return undefined;
+
+    const updateBoardWidth = () => {
+      const containerWidth = Math.floor(container.clientWidth);
+      if (containerWidth > 0) {
+        setBoardWidth(Math.min(440, containerWidth));
+      }
+    };
+
+    updateBoardWidth();
+
+    if (typeof window.ResizeObserver !== 'function') {
+      window.addEventListener('resize', updateBoardWidth);
+      return () => {
+        window.removeEventListener('resize', updateBoardWidth);
+      };
+    }
+
+    const observer = new window.ResizeObserver(updateBoardWidth);
+    observer.observe(container);
+
+    return () => {
+      observer.disconnect();
+    };
+  }, []);
+
   return (
     <div className="app">
       <header className="header">
@@ -670,12 +700,12 @@ function App() {
         </aside>
 
         <section className="board-panel" aria-label="Chess board">
-          <div className="chessboard-container">
+          <div className="chessboard-container" ref={boardContainerRef}>
             <Chessboard
               position={game.fen()}
               onPieceDrop={onDrop}
               onSquareClick={handleSquareClick}
-              boardWidth={440}
+              boardWidth={boardWidth}
               customLightSquareStyle={{ backgroundColor: boardTheme.light }}
               customDarkSquareStyle={{ backgroundColor: boardTheme.dark }}
               customSquareStyles={customSquareStyles}
