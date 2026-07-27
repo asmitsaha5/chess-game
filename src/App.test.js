@@ -90,7 +90,7 @@ jest.mock('chess.js', () => ({
 
 test('renders the chess game status', () => {
   render(<App />);
-  expect(screen.getByRole('heading', { name: /a very basic chess game/i })).toBeInTheDocument();
+  expect(screen.getByRole('heading', { name: /a chess game/i })).toBeInTheDocument();
   expect(screen.getAllByText(/choose your side/i).length).toBeGreaterThan(0);
   expect(screen.getByRole('button', { name: /play as white/i })).toBeInTheDocument();
   expect(screen.getByRole('button', { name: /play as black/i })).toBeInTheDocument();
