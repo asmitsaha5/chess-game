@@ -1,0 +1,30 @@
+services:
+  - type: web
+    name: chess-game-api
+    runtime: node
+    region: singapore
+    plan: free
+    rootDir: server
+    buildCommand: npm ci
+    preDeployCommand: npm run db:migrate
+    startCommand: npm start
+    healthCheckPath: /api/health
+    envVars:
+      - key: NODE_ENV
+        value: production
+      - key: DATABASE_URL
+        fromDatabase:
+          name: chess-game-db
+          property: connectionString
+      - key: JWT_SECRET
+        generateValue: true
+      - key: CLIENT_ORIGIN
+        value: https://chess-game-as.vercel.app
+
+databases:
+  - name: chess-game-db
+    databaseName: chess_game
+    user: chess_game_user
+    region: singapore
+    plan: free
+    postgresMajorVersion: "16"

@@ -1,0 +1,15 @@
+services:
+  database:
+    image: postgres:16-alpine
+    container_name: chess-game-db
+    environment:
+      POSTGRES_DB: chess_game
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+    ports:
+      - "5433:5432"
+    volumes:
+      - chess-game-postgres:/var/lib/postgresql/data
+
+volumes:
+  chess-game-postgres:
