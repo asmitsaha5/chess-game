@@ -306,34 +306,6 @@
   justify-self: end;
 }
 
-.account-controls {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  color: #d8d8d8;
-  font-size: 0.85rem;
-}
-
-.account-controls button,
-.auth-submit,
-.auth-switch {
-  border: 1px solid rgba(255, 255, 255, 0.16);
-  border-radius: 8px;
-  padding: 8px 10px;
-  background: rgba(255, 255, 255, 0.1);
-  color: white;
-  cursor: pointer;
-  font: inherit;
-  font-weight: 700;
-}
-
-.account-controls button:hover,
-.auth-submit:hover,
-.auth-submit:focus-visible {
-  border-color: #f4c95d;
-  background: rgba(244, 201, 93, 0.18);
-}
-
 .label {
   display: block;
   margin-bottom: 6px;
@@ -488,123 +460,6 @@
   font-weight: 800;
 }
 
-.saved-games {
-  border: 1px solid rgba(255, 255, 255, 0.16);
-  border-radius: 8px;
-  padding: 12px;
-  background: rgba(255, 255, 255, 0.075);
-  box-shadow: 0 16px 34px rgba(0, 0, 0, 0.18);
-}
-
-.saved-games p,
-.save-state {
-  margin: 4px 0 0;
-  color: #d8d8d8;
-  font-size: 0.85rem;
-}
-
-.saved-games ul {
-  display: grid;
-  gap: 7px;
-  margin: 0;
-  padding: 0;
-  list-style: none;
-}
-
-.saved-games li {
-  display: grid;
-  gap: 2px;
-  padding: 7px 8px;
-  border-radius: 6px;
-  background: rgba(255, 255, 255, 0.08);
-  text-transform: capitalize;
-}
-
-.saved-games li span {
-  color: #bdbdbd;
-  font-size: 0.76rem;
-  text-transform: none;
-}
-
-.auth-backdrop {
-  position: fixed;
-  z-index: 40;
-  inset: 0;
-  display: grid;
-  place-items: center;
-  padding: 16px;
-  background: rgba(12, 12, 12, 0.74);
-  backdrop-filter: blur(3px);
-}
-
-.auth-dialog {
-  position: relative;
-  display: grid;
-  gap: 12px;
-  width: min(100%, 370px);
-  box-sizing: border-box;
-  border: 1px solid rgba(255, 255, 255, 0.22);
-  border-radius: 10px;
-  padding: 24px;
-  background: #1c1c1c;
-  box-shadow: 0 22px 50px rgba(0, 0, 0, 0.45);
-}
-
-.auth-dialog h2,
-.auth-dialog p {
-  margin: 0;
-}
-
-.auth-dialog > p {
-  color: #d8d8d8;
-}
-
-.auth-dialog label {
-  display: grid;
-  gap: 5px;
-  color: #d8d8d8;
-  font-size: 0.85rem;
-  font-weight: 700;
-}
-
-.auth-dialog input {
-  border: 1px solid rgba(255, 255, 255, 0.2);
-  border-radius: 6px;
-  padding: 10px;
-  background: rgba(255, 255, 255, 0.08);
-  color: white;
-  font: inherit;
-}
-
-.auth-submit {
-  border: 0;
-  background: #f4c95d;
-  color: #1b1b1b;
-}
-
-.auth-switch {
-  border: 0;
-  padding: 2px;
-  background: transparent;
-  color: #f4c95d;
-}
-
-.form-error {
-  color: #ff9898 !important;
-}
-
-.dialog-close {
-  position: absolute;
-  top: 8px;
-  right: 10px;
-  border: 0;
-  padding: 2px 7px;
-  background: transparent;
-  color: white;
-  cursor: pointer;
-  font-size: 1.4rem;
-}
-
 @media (max-width: 760px) {
   .app {
     padding: 14px 12px 22px;
@@ -612,10 +467,6 @@
 
   .header {
     grid-template-columns: 1fr;
-  }
-
-  .account-controls {
-    justify-content: space-between;
   }
 
   .top-actions {

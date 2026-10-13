@@ -5,8 +5,6 @@ import { useState, useCallback, useEffect, useRef } from 'react';
 import { Chessboard } from 'react-chessboard';
 import { Chess } from 'chess.js';
 import logo from '../assets/logo.png';
-import { api } from '../api/client';
-import AuthDialog from './AuthDialog';
 
 const COLOR_OPTIONS = [
   { key: 'w', label: 'White' },
@@ -363,22 +361,6 @@ function getBestMove(game, difficulty, computerColor) {
   return getRandomMove(bestMoves);
 }
 
-function createGameRecord(game, mode, difficulty, playerColor, status) {
-  const result = status.title === 'Checkmate'
-    ? (status.detail.startsWith('White') ? 'white_win' : 'black_win')
-    : 'draw';
-  return {
-    mode,
-    difficulty: mode === 'ai' ? difficulty : null,
-    playerColor,
-    result,
-    termination: status.title === 'Checkmate' ? 'checkmate' : status.detail.toLowerCase(),
-    pgn: game.pgn(),
-    finalFen: game.fen(),
-    moveCount: game.history().length,
-  };
-}
-
 function App() {
   const [game, setGame] = useState(new Chess());
   const [isThinking, setIsThinking] = useState(false);
@@ -394,11 +376,6 @@ function App() {
   const [boardWidth, setBoardWidth] = useState(440);
   const computerMoveTimeout = useRef(null);
   const boardContainerRef = useRef(null);
-  const savedGames = useRef(new Set());
-  const [auth, setAuth] = useState(null);
-  const [isAuthDialogOpen, setIsAuthDialogOpen] = useState(false);
-  const [gameHistory, setGameHistory] = useState([]);
-  const [saveState, setSaveState] = useState('');
 
   const computerColor = mode === 'ai' && playerColor ? (playerColor === 'w' ? 'b' : 'w') : null;
   const status = getGameStatus(game, isThinking, playerColor, mode);
@@ -582,41 +559,6 @@ function App() {
   useEffect(() => clearComputerMove, [clearComputerMove]);
 
   useEffect(() => {
-    const token = window.localStorage.getItem('chess-auth-token');
-    if (!token) return;
-    api.me(token)
-      .then(({ user }) => setAuth({ token, user }))
-      .catch(() => window.localStorage.removeItem('chess-auth-token'));
-  }, []);
-
-  useEffect(() => {
-    if (!auth) {
-      setGameHistory([]);
-      return;
-    }
-    api.games(auth.token)
-      .then(({ games }) => setGameHistory(games))
-      .catch(() => setSaveState('Could not load saved games.'));
-  }, [auth]);
-
-  useEffect(() => {
-    if (!auth || !playerColor || !status.isGameOver) return;
-    const gameKey = `${game.fen()}-${game.history().length}`;
-    if (savedGames.current.has(gameKey)) return;
-    savedGames.current.add(gameKey);
-    setSaveState('Saving game…');
-    api.saveGame(auth.token, createGameRecord(game, mode, difficulty, playerColor, status))
-      .then(({ game: savedGame }) => {
-        setGameHistory((current) => [savedGame, ...current]);
-        setSaveState('Game saved');
-      })
-      .catch((error) => {
-        savedGames.current.delete(gameKey);
-        setSaveState(error.message);
-      });
-  }, [auth, difficulty, game, mode, playerColor, status]);
-
-  useEffect(() => {
     if (playerColor && game.history().length === 0 && game.turn() === computerColor && !isThinking) {
       scheduleComputerMove();
     }
@@ -650,21 +592,6 @@ function App() {
     };
   }, []);
 
-  async function handleAuthentication(credentials, isRegistering) {
-    const response = isRegistering
-      ? await api.register(credentials)
-      : await api.login(credentials);
-    window.localStorage.setItem('chess-auth-token', response.token);
-    setAuth(response);
-    setIsAuthDialogOpen(false);
-  }
-
-  function logout() {
-    window.localStorage.removeItem('chess-auth-token');
-    setAuth(null);
-    setSaveState('');
-  }
-
   return (
     <div className="app">
       <header className="header">
@@ -697,16 +624,6 @@ function App() {
               </button>
             ))}
           </div>
-        </div>
-        <div className="account-controls">
-          {auth ? (
-            <>
-              <span>Hello, {auth.user.displayName}</span>
-              <button type="button" onClick={logout}>Sign out</button>
-            </>
-          ) : (
-            <button type="button" onClick={() => setIsAuthDialogOpen(true)}>Sign in</button>
-          )}
         </div>
       </header>
 
@@ -785,22 +702,6 @@ function App() {
               <p>No moves yet</p>
             )}
           </div>
-          {auth && (
-            <div className="saved-games">
-              <span className="label">Saved games</span>
-              {saveState && <p className="save-state">{saveState}</p>}
-              {gameHistory.length ? (
-                <ul>
-                  {gameHistory.slice(0, 5).map((savedGame) => (
-                    <li key={savedGame.id}>
-                      <strong>{savedGame.result.replace('_', ' ')}</strong>
-                      <span>{savedGame.move_count} moves · {new Date(savedGame.completed_at).toLocaleDateString()}</span>
-                    </li>
-                  ))}
-                </ul>
-              ) : <p>No completed games saved yet.</p>}
-            </div>
-          )}
         </aside>
 
         <section className="board-panel" aria-label="Chess board">
@@ -917,7 +818,6 @@ function App() {
           </div>
         </section>
       </main>
-      {isAuthDialogOpen && <AuthDialog onClose={() => setIsAuthDialogOpen(false)} onSubmit={handleAuthentication} />}
     </div>
   );
 }
