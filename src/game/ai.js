@@ -1,5 +1,6 @@
 import { cloneGame } from './chessUtils';
-
+import { Chess } from 'chess.js';
+const HARD_DEPTH = 2;
 export const PIECE_VALUES = {
   p: 100,
   n: 320,
@@ -75,7 +76,7 @@ export function getBestMove(game, difficulty, computerColor) {
   let bestMoves = [];
   moves.forEach((move) => {
     game.move(move.san);
-    const score = minimax(game, 2, -Infinity, Infinity, computerColor);
+    const score = minimax(game, HARD_DEPTH, -Infinity, Infinity, computerColor);  
     game.undo();
     if (score > bestScore) {
       bestScore = score;
@@ -85,4 +86,11 @@ export function getBestMove(game, difficulty, computerColor) {
     }
   });
   return getRandomMove(bestMoves);
+}
+export function getBestMoveFromFen(fen, difficulty) {
+  const game = new Chess(fen);
+  const computerColor = game.turn();          // whoever is to move is the computer
+  const move = getBestMove(game, difficulty, computerColor);
+  if (!move) return null;
+  return { san: move.san, from: move.from, to: move.to, promotion: move.promotion };
 }
