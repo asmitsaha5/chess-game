@@ -3,6 +3,8 @@ import {
   getAuth,
   GoogleAuthProvider,
   signInWithPopup,
+  signInWithRedirect,
+  getRedirectResult,
   signInAnonymously,
   signOut,
   onAuthStateChanged,
@@ -41,7 +43,14 @@ export async function loginWithGoogle() {
   if (!auth) {
     throw new Error('Firebase is not configured. Add your REACT_APP_FIREBASE_* variables in .env');
   }
-  return signInWithPopup(auth, googleProvider);
+  try {
+    return await signInWithPopup(auth, googleProvider);
+  } catch (error) {
+    if (error.code === 'auth/popup-blocked') {
+      return await signInWithRedirect(auth, googleProvider);
+    }
+    throw error;
+  }
 }
 
 export async function loginAsGuest() {
@@ -71,5 +80,6 @@ export function subscribeToAuth(callback) {
     callback(null);
     return () => {};
   }
+  getRedirectResult(auth).catch(() => {});
   return onAuthStateChanged(auth, callback);
 }
