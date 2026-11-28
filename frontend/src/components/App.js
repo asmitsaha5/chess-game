@@ -74,7 +74,7 @@ function App() {
   const [archiveStatus, setArchiveStatus] = useState('loading');
   const [selectedReplayGame, setSelectedReplayGame] = useState(null);
 
-  const [boardWidth, setBoardWidth] = useState(440);
+  const [boardWidth, setBoardWidth] = useState(540);
   const computerMoveTimeout = useRef(null);
   const boardContainerRef = useRef(null);
   const savedPgnRef = useRef(null);
@@ -316,7 +316,7 @@ function App() {
     if (!container) return undefined;
     const updateBoardWidth = () => {
       const width = Math.floor(container.clientWidth);
-      if (width > 0) setBoardWidth(Math.min(440, width));
+      if (width > 0) setBoardWidth(Math.min(560, width));
     };
     updateBoardWidth();
     if (typeof window.ResizeObserver !== 'function') {
@@ -335,6 +335,7 @@ function App() {
           <img src={logo} alt="Chess Logo" className="game-image" />
           <div className="game-info">
             <h1>A chess game</h1>
+            <span className="game-info-sub">Strategy · AI · Multiplayer</span>
           </div>
         </div>
 
@@ -382,6 +383,41 @@ function App() {
       </div>
 
       <main className="game-layout">
+        <section className="board-panel" aria-label="Chess board">
+          <div className="chessboard-container" ref={boardContainerRef}>
+            <Chessboard
+              position={game.fen()}
+              onPieceDrop={onDrop}
+              onSquareClick={handleSquareClick}
+              boardWidth={boardWidth}
+              customLightSquareStyle={{ backgroundColor: boardTheme.light }}
+              customDarkSquareStyle={{ backgroundColor: boardTheme.dark }}
+              customSquareStyles={customSquareStyles}
+              boardOrientation={playerColor === 'b' ? 'black' : 'white'}
+              isDraggablePiece={({ piece }) =>
+                Boolean(playerColor) &&
+                !isThinking &&
+                !status.isGameOver &&
+                !pendingPromotion &&
+                (mode === 'local' ? piece.startsWith(game.turn()) : piece.startsWith(playerColor))
+              }
+            />
+            {!playerColor && (
+              <GameSetup
+                mode={setupMode}
+                difficulty={setupDifficulty}
+                playerName={playerName}
+                onPlayerNameChange={setPlayerName}
+                onModeChange={setSetupMode}
+                onDifficultyChange={setSetupDifficulty}
+                onStart={startGame}
+              />
+            )}
+            {status.isGameOver && <GameOverModal status={status} onRestart={restartGame} />}
+            {pendingPromotion && <PromotionPicker onChoose={choosePromotion} />}
+          </div>
+        </section>
+
         <aside className="side-panel" aria-label="Game details">
           <div className="status-card">
             <span className="label">Status</span>
@@ -532,41 +568,6 @@ function App() {
             )}
           </section>
         </aside>
-
-        <section className="board-panel" aria-label="Chess board">
-          <div className="chessboard-container" ref={boardContainerRef}>
-            <Chessboard
-              position={game.fen()}
-              onPieceDrop={onDrop}
-              onSquareClick={handleSquareClick}
-              boardWidth={boardWidth}
-              customLightSquareStyle={{ backgroundColor: boardTheme.light }}
-              customDarkSquareStyle={{ backgroundColor: boardTheme.dark }}
-              customSquareStyles={customSquareStyles}
-              boardOrientation={playerColor === 'b' ? 'black' : 'white'}
-              isDraggablePiece={({ piece }) =>
-                Boolean(playerColor) &&
-                !isThinking &&
-                !status.isGameOver &&
-                !pendingPromotion &&
-                (mode === 'local' ? piece.startsWith(game.turn()) : piece.startsWith(playerColor))
-              }
-            />
-            {!playerColor && (
-              <GameSetup
-                mode={setupMode}
-                difficulty={setupDifficulty}
-                playerName={playerName}
-                onPlayerNameChange={setPlayerName}
-                onModeChange={setSetupMode}
-                onDifficultyChange={setSetupDifficulty}
-                onStart={startGame}
-              />
-            )}
-            {status.isGameOver && <GameOverModal status={status} onRestart={restartGame} />}
-            {pendingPromotion && <PromotionPicker onChoose={choosePromotion} />}
-          </div>
-        </section>
       </main>
 
       {selectedReplayGame && (
